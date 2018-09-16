@@ -1,20 +1,19 @@
 package ui;
 
 public class Student {
+    String fName;
+    String lName;
+    String attendance = "here"; //"here" or "absent"
 
-    public String name;
-    private int grade;
-    private int quizTotal;
-    private int percent;
-
-    Student(String name, int grade, int quizTotal) {
-        this.name = name;
-        this.grade = grade;
-        this.quizTotal = quizTotal;
+    public Student(String fName, String lName) {
+        this.fName = fName;
+        this.lName = lName;
     }
 
-    public int calculateGrade() {
-        this.percent = (grade * 100 / quizTotal);
-        return percent;
+    public String setAttendance(String a){
+        if (a == "absent") {
+            this.attendance = "absent";
+        }
+        return this.attendance;
     }
 }
