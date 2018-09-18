@@ -9,10 +9,9 @@ public class AttendanceTaker {
     Scanner scanner = new Scanner(System.in);
 
     public AttendanceTaker(){
-        String action;
         while (true) {
             System.out.println("What would you like to do? [1] add to class-list, [2] mark student absent, [3] show list.");
-            action = scanner.nextLine();
+            String action = scanner.nextLine();
 
             if (action.equals("1")) {
                 createStudent();
@@ -40,8 +39,8 @@ public class AttendanceTaker {
         }
         Integer selection = scanner.nextInt() - 1;
         Student student = classList.get(selection);
-        String attendance = student.setAttendance("absent");
-        System.out.println(student.fName + " " + student.lName + " has been marked " + attendance + ".");
+        student.setAttendance(false);
+        System.out.println(student.fName + " " + student.lName + " has been marked " + student.getAttendance() + ".");
         scanner.nextLine();
     }
 

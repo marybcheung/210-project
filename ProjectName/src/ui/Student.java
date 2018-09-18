@@ -10,10 +10,14 @@ public class Student {
         this.lName = lName;
     }
 
-    public String setAttendance(String a){
-        if (a == "absent") {
+    public String setAttendance(Boolean b){
+        if (b == false) {
             this.attendance = "absent";
         }
         return this.attendance;
+    }
+
+    public String getAttendance() {
+        return attendance;
     }
 }
