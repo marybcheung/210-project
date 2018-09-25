@@ -49,8 +49,7 @@ public class StudentManager {
             }
         }
     }
-
-
+    //REQUIRES: grade >= 0 && grade <= hl.getOutOf()
     //MODIFIES: this
     //EFFECTS: sets selected Student's mark in selected Homework
     private void recordMarks() {
