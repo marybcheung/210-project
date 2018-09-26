@@ -41,4 +41,8 @@ public class Homework {
     public double getGrade() {
         return grade;
     }
+
+    public double getOutOf(){
+        return outOf;
+    }
 }

@@ -15,6 +15,12 @@ public class testHomework {
         h = new Homework("OSH0", 16);
     }
 
+    @Test
+    public void testConstructor(){
+        assertEquals("OSH0",h.getName());
+        assertEquals(16, h.getOutOf(), 0.0001);
+    }
+
 
     @Test
     public void testCalculateGradeNoDecimal(){
@@ -30,6 +36,5 @@ public class testHomework {
         assertEquals(15, h.getEarned(), 0.0001);
         h.calculateGrade();
         assertEquals(93.75, h.getGrade(), 0.0001);
-    }
-
+        }
 }
