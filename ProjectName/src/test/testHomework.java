@@ -27,7 +27,7 @@ public class testHomework {
         h.setEarned(8);
         assertEquals(8, h.getEarned(), 0.0001);
         h.calculateGrade();
-        assertEquals(50.00, h.getGrade(), 0.0001);
+        assertEquals(50.00, h.calculateGrade(), 0.0001);
     }
 
     @Test
@@ -35,6 +35,6 @@ public class testHomework {
         h.setEarned(15);
         assertEquals(15, h.getEarned(), 0.0001);
         h.calculateGrade();
-        assertEquals(93.75, h.getGrade(), 0.0001);
+        assertEquals(93.75, h.calculateGrade(), 0.0001);
         }
 }

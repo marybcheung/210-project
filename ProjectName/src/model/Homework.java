@@ -1,10 +1,11 @@
 package model;
 
-public class Homework {
+import interfaces.ForLater.Assessment;
+
+public class Homework implements Assessment {
     private String name;
     private double outOf = 1;
     private double earned;
-    private double grade;
 
     //MODIFIES: this
     //EFFECTS: constructs a Homework and sets name and outOf to parameter values
@@ -30,18 +31,15 @@ public class Homework {
         return name;
     }
 
+    @Override
     //REQUIRES: outOf != 0
     //MODIFIES: this
     //EFFECTS: calculates and sets the mark a student received out of 100.00
-    public void calculateGrade(){
-        this.grade = earned/outOf * 100.00;
+    public double calculateGrade(){
+        return Math.round((earned/outOf * 100.00)*100.00)/100.00;
     }
 
-    //EFFECTS: returns grade
-    public double getGrade() {
-        return grade;
-    }
-
+    //EFFECTS: returns outOf
     public double getOutOf(){
         return outOf;
     }
