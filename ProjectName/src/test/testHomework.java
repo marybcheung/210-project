@@ -1,6 +1,6 @@
 package test;
 
-import model.Homework;
+import model.HomeworkEval;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,11 +8,11 @@ import static org.junit.Assert.assertEquals;
 
 
 public class testHomework {
-    Homework h;
+    HomeworkEval h;
 
     @Before
     public void setUp() {
-        h = new Homework("OSH0", 16);
+        h = new HomeworkEval("OSH0", 16);
     }
 
     @Test

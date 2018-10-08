@@ -1,7 +1,7 @@
 package test;
 
 import interfaces.Loadable;
-import model.Homework;
+import model.HomeworkEval;
 import model.Student;
 import model.StudentManager;
 import org.junit.Before;
@@ -26,11 +26,13 @@ public class testLoadable {
     public void testLoad() throws Exception {
         sM.loadSM(classList);
         Student s0 = classList.get(0);
-        List<Homework> loh0 = s0.getListOfHomework();
-        Homework h0 = loh0.get(0);
+        List<HomeworkEval> loh0 = s0.getListOfHomework();
+        HomeworkEval h0 = loh0.get(0);
         Student s1 = classList.get(1);
-        List<Homework> loh1 = s1.getListOfHomework();
-        Homework h1 = loh1.get(0);
+        List<HomeworkEval> loh1 = s1.getListOfHomework();
+        HomeworkEval h1 = loh1.get(0);
+        Double totalS0 = s0.getAttendanceEval().getOutOf();
+        Double earnedS0 = s0.getAttendanceEval().getEarned();
         assertEquals("Mary", s0.getfName());
         assertEquals("Cheung", s0.getlName());
         assertEquals("math", h0.getName());
@@ -41,6 +43,9 @@ public class testLoadable {
         assertEquals("math", h1.getName());
         assertEquals(0.0, h1.getEarned(), 0.0001);
         assertEquals(20.0, h1.getOutOf(), 0.0001);
+        assertEquals(180.00, totalS0, 0.0001);
+        assertEquals(179.00, earnedS0, 0.0001);
+
     }
 
 

@@ -6,15 +6,15 @@ import java.util.List;
 public class Student {
     private String fName;
     private String lName;
-    private ArrayList<Homework> listOfHomeWork = new ArrayList<>();
-    //private Attendance attendance; <-- may implement in StudentManager later
+    private ArrayList<HomeworkEval> listOfHomeWork = new ArrayList<>();
+    private AttendanceEval attendanceEval;
 
     //MODIFIES: this
     //EFFECTS: constructs a Student and sets fName and lName to parameter values
     public Student(String fName, String lName) {
         this.fName = fName;
         this.lName = lName;
-        //attendance = new Attendance(StudentManager.totalDays);
+        //attendance = new AttendanceEval(StudentManager.totalDays);
     }
 
     //EFFECTS: returns the first name
@@ -28,7 +28,15 @@ public class Student {
     }
 
     //EFFECTS: returns listOfHomework
-    public List<Homework> getListOfHomework(){
+    public List<HomeworkEval> getListOfHomework(){
         return this.listOfHomeWork;
+    }
+
+    public void setAttendanceEval(AttendanceEval attendanceEval) {
+        this.attendanceEval = attendanceEval;
+    }
+
+    public AttendanceEval getAttendanceEval(){
+        return attendanceEval;
     }
 }

@@ -1,3 +1,2 @@
-Harry Potter math 0.0 35.0
-Steven Universe math 0.0 35.0
-Arnold Shortman math 0.0 35.0
+Mary Cheung 180.0 180.0 math 20.0 100.0
+Angela Cheung 180.0 180.0 math 100.0 100.0
