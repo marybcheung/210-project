@@ -16,6 +16,8 @@ public abstract class Evaluation {
         this.earned = earned;
     }
 
+    //REQUIRES: outOf != 0
+    //EFFECTS: returns grade percentage
     public double calculateGrade() {
         return Math.round((earned / outOf * ONE_HUNDRED)* ONE_HUNDRED)/ONE_HUNDRED;
     }
@@ -25,10 +27,11 @@ public abstract class Evaluation {
         return outOf;
     }
 
-    //returns earned
+    //EFFECTS: returns earned
     public double getEarned() {
         return earned;
     }
 
+    //EFFECTS: returns a string describing what a student needs
     public abstract String studentNeeds();
 }

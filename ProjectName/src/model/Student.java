@@ -32,10 +32,13 @@ public class Student {
         return this.listOfHomeWork;
     }
 
+    //MODIFIES: this
+    //EFFECTS: sets attendanceEval
     public void setAttendanceEval(AttendanceEval attendanceEval) {
         this.attendanceEval = attendanceEval;
     }
 
+    //EFFECTS: returns attendanceEval
     public AttendanceEval getAttendanceEval(){
         return attendanceEval;
     }

@@ -51,6 +51,9 @@ public class StudentManager implements Loadable, Saveable{
         }
     }
 
+    //REQUIRES: at least one student in the class-List, totalDays is set
+    //MODIFIES: this
+    //EFFECTS: marks a student absent, and prints out confirmation
     private void markAbsent() {
         printSelectionDisplay();
         Integer selection = scanner.nextInt() - 1;
@@ -64,6 +67,9 @@ public class StudentManager implements Loadable, Saveable{
     }
 
 
+    //REQUIRES: user input is an integer
+    //MODIFIES: this
+    //EFFECTS: sets totalDays to user input
     private void setTotalDays() {
         System.out.println("Before adding a student, please enter the total number of days in the school year.");
         totalDays = scanner.nextInt();
@@ -169,6 +175,8 @@ public class StudentManager implements Loadable, Saveable{
         }
     }
 
+    //REQUIRES: loh is not an empty list
+    //EFFECTS: prints out a numbered selection of all homework
     private void printHomeworkSelection(List<HomeworkEval> loh) {
         Integer i = 1;
         for (HomeworkEval h : loh) {

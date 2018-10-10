@@ -17,6 +17,8 @@ public class HomeworkEval extends Evaluation {
     }
 
     @Override
+    //EFFECTS: if the student got below 50% on their assignment, return a statement saying they struggled,
+    //         otherwise return an empty string
     public String studentNeeds(){
         if (this.calculateGrade() < 50.00) {
             return " struggled with " + name + ", and";
