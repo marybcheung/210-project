@@ -1,15 +1,25 @@
 package model;
 
+import exceptions.NegativeNumeratorException;
+
 public class AttendanceEval extends Evaluation{
 
     public AttendanceEval(double totalDays){
       super(totalDays);
-      super.setEarned(totalDays);
+        try {
+            super.setEarned(totalDays);
+        } catch (NegativeNumeratorException e) {
+            e.printStackTrace();
+        }
     }
 
+    //REQUIRES: earned >= 1
     //MODIFIES: this
     //EFFECTS: subtracts one mark from earned
-    public void deductMark() {
+    public void deductMark() throws NegativeNumeratorException {
+        if (earned <= 0){
+            throw new NegativeNumeratorException();
+        }
         this.earned -= 1;
     }
 

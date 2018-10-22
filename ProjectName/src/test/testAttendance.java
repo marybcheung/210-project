@@ -1,7 +1,7 @@
 package test;
 
+import exceptions.NegativeNumeratorException;
 import model.AttendanceEval;
-import model.HomeworkEval;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class testAttendance {
     }
 
     @Test
-    public void testCalculateGradeAttendanceNoDecimal(){
+    public void testCalculateGradeAttendanceNoDecimal() throws NegativeNumeratorException {
         assertEquals(100.00, a.calculateGrade(), 0.0001);
         for (int i = 0; i < 90; i++){
             a.deductMark();
@@ -27,7 +27,7 @@ public class testAttendance {
     }
 
     @Test
-    public void testCalculateGradeAttendanceDecimal(){
+    public void testCalculateGradeAttendanceDecimal() throws NegativeNumeratorException {
         a.deductMark();
         assertEquals(99.44, a.calculateGrade(), 0.0001);
     }

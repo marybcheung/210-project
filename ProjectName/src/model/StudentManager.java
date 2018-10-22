@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.NegativeNumeratorException;
 import interfaces.Loadable;
 import interfaces.Saveable;
 
@@ -42,9 +43,15 @@ public class StudentManager implements Loadable, Saveable{
                 break;
                 case "6": if(classList.size() != 0) {markAbsent();}
                 break;
-                case "7": loadSM(classList);
+                case "7": try {loadSM(classList);
+                } catch (IOException e){
+                    System.out.println("Could not find the save file.");
+                }
                 break;
-                case "8": saveSM(classList);
+                case "8": try {saveSM(classList);
+                } catch (IOException e){
+                    System.out.println("Could not find the save file.");
+                }
                 break;
                 case "9" : break interactionLoop;
             }
@@ -59,10 +66,15 @@ public class StudentManager implements Loadable, Saveable{
         Integer selection = scanner.nextInt() - 1;
         if (selection >= 0 && selection < classList.size()) {
             Student s = classList.get(selection);
-            s.getAttendanceEval().deductMark();
-            System.out.println(s.getfName() + " has been marked absent.");
+            try {
+                s.getAttendanceEval().deductMark();
+                System.out.println(s.getfName() + " has been marked absent.");
+            } catch (NegativeNumeratorException e) {
+                System.out.println("Student cannot be absent for more days than there are in the school year.");
+            } finally {scanner.nextLine();}
+
         }
-        scanner.nextLine();
+
 
     }
 
@@ -170,8 +182,12 @@ public class StudentManager implements Loadable, Saveable{
             HomeworkEval homework = loh.get(selection);
             System.out.println("Total marks: " + homework.getOutOf() + ". " + "Please enter the student's grade");
             Integer grade = scanner.nextInt();
-            homework.setEarned(grade);
-            System.out.println("You have recorded " + s.getfName() + "'s mark.");
+            try {
+                homework.setEarned(grade);
+                System.out.println("You have recorded " + s.getfName() + "'s mark.");
+            } catch (NegativeNumeratorException e) {
+                System.out.println("Cannot set mark to a negative integer.");
+            }
         }
     }
 
@@ -207,6 +223,7 @@ public class StudentManager implements Loadable, Saveable{
     //EFFECTS: constructs a new HomeworkEval and adds it to listOfHomework for every Student
     //         in the class-list
     private void assignClassHomework() {
+
         System.out.println("Please enter a name for this assignment.");
         String name = scanner.nextLine();
         System.out.println("Please enter the total marks.");

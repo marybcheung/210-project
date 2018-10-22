@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.NegativeNumeratorException;
+
 public abstract class Evaluation {
     protected double earned;
     private double outOf;
@@ -9,10 +11,12 @@ public abstract class Evaluation {
         this.outOf = outOf;
     }
 
-    //REQUIRES: earned >= 0 && earned <= outOf
     //MODIFIES: this
     //EFFECTS: sets earned to parameter value
-    public void setEarned(double earned) {
+    public void setEarned(double earned) throws NegativeNumeratorException {
+        if (earned < 0){
+            throw new NegativeNumeratorException();
+        }
         this.earned = earned;
     }
 
