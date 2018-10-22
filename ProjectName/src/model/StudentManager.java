@@ -58,7 +58,7 @@ public class StudentManager implements Loadable, Saveable{
         }
     }
 
-    //REQUIRES: at least one student in the class-List, totalDays is set
+    //REQUIRES: at least one student in the class-List, totalDays is set.
     //MODIFIES: this
     //EFFECTS: marks a student absent, and prints out confirmation
     private void markAbsent() {
