@@ -1,6 +1,7 @@
 package test;
 
 import model.HomeworkEval;
+import model.Student;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ public class testHomework {
 
     @Before
     public void setUp() {
-        h = new HomeworkEval("OSH0", 16);
+        h = new HomeworkEval("OSH0", 16, new Student("Mary", "Cheung"));
     }
 
     @Test

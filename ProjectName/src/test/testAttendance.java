@@ -2,6 +2,7 @@ package test;
 
 import exceptions.NegativeNumeratorException;
 import model.AttendanceEval;
+import model.Student;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ public class testAttendance {
 
     @Before
     public void setUp() {
-        a = new AttendanceEval(180);
+        a = new AttendanceEval(180, new Student("Mary", "Cheung"));
     }
 
     @Test

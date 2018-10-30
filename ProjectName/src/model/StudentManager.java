@@ -71,8 +71,9 @@ public class StudentManager implements Loadable, Saveable{
                 System.out.println(s.getfName() + " has been marked absent.");
             } catch (NegativeNumeratorException e) {
                 System.out.println("Student cannot be absent for more days than there are in the school year.");
-            } finally {scanner.nextLine();}
-
+            } finally {
+                scanner.nextLine();
+            }
         }
 
 
@@ -136,12 +137,13 @@ public class StudentManager implements Loadable, Saveable{
             for (String line : inputLines) {
                 ArrayList<String> inputsList = splitOnSpace(line);
                 Student s = new Student(inputsList.get(0), inputsList.get(1));
-                AttendanceEval attendance = new AttendanceEval(Double.parseDouble(inputsList.get(2)));
+                AttendanceEval attendance = new AttendanceEval(Double.parseDouble(inputsList.get(2)), s);
+                totalDays = Double.parseDouble(inputsList.get(2));
                 attendance.setEarned(Double.parseDouble(inputsList.get(3)));
                 s.setAttendanceEval(attendance);
                 if (inputsList.size() > 4) {
                     for (int i = 4; i < inputsList.size(); i += 3) {
-                        HomeworkEval h = new HomeworkEval(inputsList.get(i), (int) Math.round(Double.parseDouble(inputsList.get(i + 2))));
+                        HomeworkEval h = new HomeworkEval(inputsList.get(i), (int) Math.round(Double.parseDouble(inputsList.get(i + 2))), s);
                         h.setEarned((int) Math.round(Double.parseDouble(inputsList.get(i + 1))));
                         s.getListOfHomework().add(h);
                     }
@@ -223,13 +225,12 @@ public class StudentManager implements Loadable, Saveable{
     //EFFECTS: constructs a new HomeworkEval and adds it to listOfHomework for every Student
     //         in the class-list
     private void assignClassHomework() {
-
         System.out.println("Please enter a name for this assignment.");
         String name = scanner.nextLine();
         System.out.println("Please enter the total marks.");
         Integer total = scanner.nextInt();
         for (Student s:classList) {
-            s.getListOfHomework().add(new HomeworkEval(name,total));
+            s.getListOfHomework().add(new HomeworkEval(name,total,s));
         }
         System.out.println("You have assigned " + name + " to the class.");
         scanner.nextLine();
@@ -237,7 +238,7 @@ public class StudentManager implements Loadable, Saveable{
 
 
     //EFFECTS: prints out a student's first and last name, as well as certain needs for all students in the classList
-    private void printList(ArrayList<Student> classList) {
+    private void printList(List<Student> classList) {
         for (Student s: classList){
             String finalString = s.getfName() + " " + s.getlName();
             for (HomeworkEval h: s.getListOfHomework()) {
@@ -268,7 +269,7 @@ public class StudentManager implements Loadable, Saveable{
         System.out.println("Please enter the student's last name.");
         String lName = scanner.nextLine();
         Student s = new Student(fName, lName);
-        s.setAttendanceEval(new AttendanceEval(totalDays));
+        s.setAttendanceEval(new AttendanceEval(totalDays, s));
         classList.add(s);
         System.out.println("You have added " + fName + " " + lName + " " + "to the class-list.");
     }

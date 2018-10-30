@@ -4,8 +4,8 @@ import exceptions.NegativeNumeratorException;
 
 public class AttendanceEval extends Evaluation{
 
-    public AttendanceEval(double totalDays){
-      super(totalDays);
+    public AttendanceEval(double totalDays, Student student){
+      super(totalDays, student);
         try {
             super.setEarned(totalDays);
         } catch (NegativeNumeratorException e) {
@@ -33,4 +33,14 @@ public class AttendanceEval extends Evaluation{
             return " has a good attendance record.";
         }
     }
+
+    public void setStudent(Student student) {
+        if (!this.student.equals(student)){
+            this.student = student;
+            student.setAttendanceEval(this);
+        }
+    }
+
+
+
 }

@@ -16,8 +16,8 @@ public class testNegativeNumeratorException {
     @Before
     public void setUp(){
         testStudent = new Student("Mary","Cheung");
-        testStudent.setAttendanceEval(new AttendanceEval(1));
-        h0 = new HomeworkEval("math", 20);
+        testStudent.setAttendanceEval(new AttendanceEval(1, testStudent));
+        h0 = new HomeworkEval("math", 20, testStudent);
     }
 
     @Test

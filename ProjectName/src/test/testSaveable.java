@@ -32,11 +32,11 @@ public class testSaveable {
         classList.add(s);
         classList.add(s0);
         for (Student student:classList) {
-            student.getListOfHomework().add(new HomeworkEval("math",20));
+            student.addHomeworkEval(new HomeworkEval("math",20, s));
         }
         s.getListOfHomework().get(0).setEarned(15);
-        s.setAttendanceEval(new AttendanceEval(180.00));
-        s0.setAttendanceEval(new AttendanceEval(180.00));
+        s.setAttendanceEval(new AttendanceEval(180.00, s));
+        s0.setAttendanceEval(new AttendanceEval(180.00, s));
         s.getAttendanceEval().setEarned(179.00);
         s0.getAttendanceEval().setEarned(180.00);
         sM.saveSM(classList);
