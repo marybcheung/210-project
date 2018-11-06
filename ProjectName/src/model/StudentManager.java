@@ -19,6 +19,7 @@ public class StudentManager implements Loadable, Saveable{
     static ArrayList<Student> classList = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
     static double totalDays;
+    private Printer printer = new Printer();
 
 
     //MODIFIES: this
@@ -91,16 +92,17 @@ public class StudentManager implements Loadable, Saveable{
 
     //EFFECTS: prints out the list of actions a user can take
     private void printUserChoices() {
-        System.out.println("What would you like to do?");
-        System.out.println("[1] add to class-list");
-        System.out.println("[2] assign homework");
-        System.out.println("[3] record marks");
-        System.out.println("[4] calculate student grades");
-        System.out.println("[5] show class-list alerts");
-        System.out.println("[6] mark a student absent");
-        System.out.println("[7] load saved class-list");
-        System.out.println("[8] save current class-list");
-        System.out.println("[9] quit the application");
+        printer.printUserChoices();
+//        System.out.println("What would you like to do?");
+//        System.out.println("[1] add to class-list");
+//        System.out.println("[2] assign homework");
+//        System.out.println("[3] record marks");
+//        System.out.println("[4] calculate student grades");
+//        System.out.println("[5] show class-list alerts");
+//        System.out.println("[6] mark a student absent");
+//        System.out.println("[7] load saved class-list");
+//        System.out.println("[8] save current class-list");
+//        System.out.println("[9] quit the application");
     }
 
 
@@ -110,22 +112,26 @@ public class StudentManager implements Loadable, Saveable{
         List<String> lines = new ArrayList<String>();
         PrintWriter writer = new PrintWriter("outputinput.txt","UTF-8");
         for (Student s: classList0) {
-            List<HomeworkEval> loh = s.getListOfHomework();
-            AttendanceEval attendanceEval = s.getAttendanceEval();
-            String finalString = s.getfName() + " " + s.getlName() + " " + attendanceEval.getOutOf() + " " + attendanceEval.getEarned();
-            if(loh.size() != 0){
-                for (HomeworkEval h: loh) {
-                     finalString += " "+ h.getName()+ " " + h.getEarned() + " " + h.getOutOf();
-                }
-            }
-            lines.add(finalString);
-
+            addStudentInfoToLines(lines, s);
         }
         for (String line: lines) {
             writer.println(line);
         }
         writer.close();
         System.out.println("You have saved the class-list");
+    }
+
+    //This was originally in the saveSM method, extracted for better readability
+    private void addStudentInfoToLines(List<String> lines, Student s) {
+        List<HomeworkEval> loh = s.getListOfHomework();
+        AttendanceEval attendanceEval = s.getAttendanceEval();
+        String finalString = s.getfName() + " " + s.getlName() + " " + attendanceEval.getOutOf() + " " + attendanceEval.getEarned();
+        if(loh.size() != 0){
+            for (HomeworkEval h: loh) {
+                 finalString += " "+ h.getName()+ " " + h.getEarned() + " " + h.getOutOf();
+            }
+        }
+        lines.add(finalString);
     }
 
 
@@ -136,23 +142,33 @@ public class StudentManager implements Loadable, Saveable{
         if (inputLines.size() != 0) {
             for (String line : inputLines) {
                 ArrayList<String> inputsList = splitOnSpace(line);
-                Student s = new Student(inputsList.get(0), inputsList.get(1));
-                AttendanceEval attendance = new AttendanceEval(Double.parseDouble(inputsList.get(2)), s);
-                totalDays = Double.parseDouble(inputsList.get(2));
-                attendance.setEarned(Double.parseDouble(inputsList.get(3)));
-                s.setAttendanceEval(attendance);
+                Student s = loadStudent(inputsList);
                 if (inputsList.size() > 4) {
-                    for (int i = 4; i < inputsList.size(); i += 3) {
-                        HomeworkEval h = new HomeworkEval(inputsList.get(i), (int) Math.round(Double.parseDouble(inputsList.get(i + 2))), s);
-                        h.setEarned((int) Math.round(Double.parseDouble(inputsList.get(i + 1))));
-                        s.getListOfHomework().add(h);
-                    }
+                    loadHomework(inputsList, s);
                 }
                 classList.add(s);
             }
             System.out.println("You have loaded a class-list.");
         } else {
             System.out.println("There is no saved class-list.");
+        }
+    }
+
+    //loadStudent and loadHomework were originally in loadSM but taken out for better readability
+    private Student loadStudent(ArrayList<String> inputsList) {
+        Student s = new Student(inputsList.get(0), inputsList.get(1));
+        AttendanceEval attendance = new AttendanceEval(Double.parseDouble(inputsList.get(2)), s);
+        totalDays = Double.parseDouble(inputsList.get(2));
+        attendance.setEarned(Double.parseDouble(inputsList.get(3)));
+        s.setAttendanceEval(attendance);
+        return s;
+    }
+
+    private void loadHomework(ArrayList<String> inputsList, Student s) {
+        for (int i = 4; i < inputsList.size(); i += 3) {
+            HomeworkEval h = new HomeworkEval(inputsList.get(i), (int) Math.round(Double.parseDouble(inputsList.get(i + 2))), s);
+            h.setEarned((int) Math.round(Double.parseDouble(inputsList.get(i + 1))));
+            s.getListOfHomework().add(h);
         }
     }
 
@@ -170,16 +186,15 @@ public class StudentManager implements Loadable, Saveable{
         Integer selection = scanner.nextInt() - 1;
         if (selection >= 0 && selection < classList.size()) {
             Student s = classList.get(selection);
-            System.out.println("Please select an assignment.");
             List<HomeworkEval> loh = s.getListOfHomework();
             printHomeworkSelection(loh);
             Integer hSelection = scanner.nextInt() - 1;
-            recordMarksHelper(s, loh, hSelection);
+            recordTheMark(s, loh, hSelection);
         }
         scanner.nextLine();
     }
 
-    private void recordMarksHelper(Student s, List<HomeworkEval> loh, Integer selection) {
+    private void recordTheMark(Student s, List<HomeworkEval> loh, Integer selection) {
         if (selection >= 0 && selection < loh.size()) {
             HomeworkEval homework = loh.get(selection);
             System.out.println("Total marks: " + homework.getOutOf() + ". " + "Please enter the student's grade");
@@ -193,15 +208,6 @@ public class StudentManager implements Loadable, Saveable{
         }
     }
 
-    //REQUIRES: loh is not an empty list
-    //EFFECTS: prints out a numbered selection of all homework
-    private void printHomeworkSelection(List<HomeworkEval> loh) {
-        Integer i = 1;
-        for (HomeworkEval h : loh) {
-            System.out.println("[" + i + "] " + h.getName());
-            i++;
-        }
-    }
 
     //MODIFIES: this
     //EFFECTS: calculates % grade for each HomeworkEval in selected Student's
@@ -239,25 +245,37 @@ public class StudentManager implements Loadable, Saveable{
 
     //EFFECTS: prints out a student's first and last name, as well as certain needs for all students in the classList
     private void printList(List<Student> classList) {
-        for (Student s: classList){
-            String finalString = s.getfName() + " " + s.getlName();
-            for (HomeworkEval h: s.getListOfHomework()) {
-                finalString += h.studentNeeds();
-            }
-            System.out.println(finalString + s.getAttendanceEval().studentNeeds());
-        }
+        printer.printList(classList);
+//        for (Student s: classList){
+//            String finalString = s.getfName() + " " + s.getlName();
+//            for (HomeworkEval h: s.getListOfHomework()) {
+//                finalString += h.studentNeeds();
+//            }
+//            System.out.println(finalString + s.getAttendanceEval().studentNeeds());
+//        }
     }
 
-
+    //note: printHomeworkSelection and printSelectionDisplay were refactored out to reduce duplication
+    //REQUIRES: loh is not an empty list
+    //EFFECTS: prints out a numbered selection of all homework
+    private void printHomeworkSelection(List<HomeworkEval> loh) {
+        printer.printHomeworkSelection(loh);
+//        Integer i = 1;
+//        for (HomeworkEval h : loh) {
+//            System.out.println("[" + i + "] " + h.getName());
+//            i++;
+//        }
+    }
 
     //EFFECTS: prints out all students in the classList, numbered starting from 1,
     private void printSelectionDisplay() {
-            System.out.println("Please select a student");
-            int i = 1;
-            for (Student s : classList) {
-                System.out.println("[" + i + "]" + " " + s.getfName() + " " + s.getlName());
-                i++;
-            }
+        printer.printSelectionDisplay(classList);
+//            System.out.println("Please select a student");
+//            int i = 1;
+//            for (Student s : classList) {
+//                System.out.println("[" + i + "]" + " " + s.getfName() + " " + s.getlName());
+//                i++;
+//            }
         }
 
     //MODIFIES: this

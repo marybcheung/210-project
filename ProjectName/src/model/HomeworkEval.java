@@ -8,8 +8,8 @@ public class HomeworkEval extends Evaluation {
     //MODIFIES: this
     //EFFECTS: constructs a HomeworkEval and sets name and outOf to parameter values
     public HomeworkEval(String name, Integer outOf, Student student) {
-     super(outOf, student);
-     this.name = name;
+        super(outOf, student);
+        this.name = name;
     }
 
 
