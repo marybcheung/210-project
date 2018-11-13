@@ -89,8 +89,9 @@ public class StudentManager extends Subject implements Loadable, Saveable{
             System.out.println(sb);
             JSONObject obj = new JSONObject(sb.toString());
             Double temp = obj.getJSONObject("main").getDouble("temp");
+            String weather = obj.getJSONArray("weather").getJSONObject(0).getString("description");
             Double tempInCelcius =Math.round ((temp -  273.15) * 10000.0) / 10000.0;
-            System.out.println("It is currently " + tempInCelcius + " celcius degrees.");
+            System.out.println("It is currently " + tempInCelcius + " celcius degrees with " + weather+".");
 
         } finally {
 

@@ -5,6 +5,7 @@ import java.util.List;
 public class Printer {
 
     public void printUserChoices() {
+        System.out.println("");
         System.out.println("What would you like to do?");
         System.out.println("[1] add to class-list");
         System.out.println("[2] assign homework");
