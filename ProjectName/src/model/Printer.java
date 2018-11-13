@@ -14,7 +14,8 @@ public class Printer {
         System.out.println("[6] mark a student absent");
         System.out.println("[7] load saved class-list");
         System.out.println("[8] save current class-list");
-        System.out.println("[9] quit the application");
+        System.out.println("[9] check the weather");
+        System.out.println("[10] quit the application");
     }
 
     public void printList(List<Student> classList) {

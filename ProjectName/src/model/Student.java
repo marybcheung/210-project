@@ -1,10 +1,8 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-public class Student {
+public class Student implements Observer {
     private String fName;
     private String lName;
     private ArrayList<HomeworkEval> listOfHomeWork = new ArrayList<>();
@@ -70,5 +68,10 @@ public class Student {
     public int hashCode() {
 
         return Objects.hash(fName, lName);
+    }
+
+    @Override
+    public void update(String name, Integer outOf) {
+        System.out.println(fName + " " + lName + " has been notified about new assignment: " + name +" ["+outOf+"]");
     }
 }

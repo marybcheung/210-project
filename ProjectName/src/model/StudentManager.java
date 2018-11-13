@@ -4,8 +4,11 @@ import exceptions.NegativeNumeratorException;
 import interfaces.Loadable;
 import interfaces.Saveable;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -13,9 +16,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import jdk.nashorn.internal.parser.JSONParser;
+import netscape.javascript.JSObject;
+import org.json.*;
+
 //used LittleCalculatorStarterLab as a reference
 //used FileReaderWriter as a reference
-public class StudentManager implements Loadable, Saveable{
+public class StudentManager extends Subject implements Loadable, Saveable{
     static ArrayList<Student> classList = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
     static double totalDays;
@@ -26,7 +33,7 @@ public class StudentManager implements Loadable, Saveable{
     //EFFECTS: takes user input to call appropriate function, unless classList is empty, in which case
     //         [2], [3], [4], and [5] do nothing, or if the students have not been assigned any homework,
     //         in which case [3] and [4] do nothing
-    public void run() throws IOException {
+    public void run() throws IOException, JSONException {
         interactionLoop: while (true) {
             printUserChoices();
             String action = scanner.nextLine();
@@ -54,7 +61,41 @@ public class StudentManager implements Loadable, Saveable{
                     System.out.println("Could not find the save file.");
                 }
                 break;
-                case "9" : break interactionLoop;
+                case "9": checkWeather();
+                break;
+                case "10" : break interactionLoop;
+            }
+        }
+    }
+
+    private void checkWeather() throws IOException, JSONException {
+        String apikey = "d4d3ad1357a5b82005a201318ed641e5"; //fill this in with the API key they email you
+        String weatherquery = "https://api.openweathermap.org/data/2.5/weather?q=Vancouver,ca&APPID=";
+        String theURL = weatherquery+apikey;
+        BufferedReader br = null;
+        try {
+            URL url = new URL(theURL);
+            br = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String line;
+
+            StringBuilder sb = new StringBuilder();
+
+            while ((line = br.readLine()) != null) {
+
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+            System.out.println(sb);
+            JSONObject obj = new JSONObject(sb.toString());
+            Double temp = obj.getJSONObject("main").getDouble("temp");
+            Double tempInCelcius =Math.round ((temp -  273.15) * 10000.0) / 10000.0;
+            System.out.println("It is currently " + tempInCelcius + " celcius degrees.");
+
+        } finally {
+
+            if (br != null) {
+                br.close();
             }
         }
     }
@@ -93,16 +134,6 @@ public class StudentManager implements Loadable, Saveable{
     //EFFECTS: prints out the list of actions a user can take
     private void printUserChoices() {
         printer.printUserChoices();
-//        System.out.println("What would you like to do?");
-//        System.out.println("[1] add to class-list");
-//        System.out.println("[2] assign homework");
-//        System.out.println("[3] record marks");
-//        System.out.println("[4] calculate student grades");
-//        System.out.println("[5] show class-list alerts");
-//        System.out.println("[6] mark a student absent");
-//        System.out.println("[7] load saved class-list");
-//        System.out.println("[8] save current class-list");
-//        System.out.println("[9] quit the application");
     }
 
 
@@ -147,6 +178,7 @@ public class StudentManager implements Loadable, Saveable{
                     loadHomework(inputsList, s);
                 }
                 classList.add(s);
+                addObserver(s);
             }
             System.out.println("You have loaded a class-list.");
         } else {
@@ -236,8 +268,10 @@ public class StudentManager implements Loadable, Saveable{
         System.out.println("Please enter the total marks.");
         Integer total = scanner.nextInt();
         for (Student s:classList) {
-            s.getListOfHomework().add(new HomeworkEval(name,total,s));
+            HomeworkEval h = new HomeworkEval(name, total, s);
+            s.getListOfHomework().add(h);
         }
+        notifyObservers(name, total);
         System.out.println("You have assigned " + name + " to the class.");
         scanner.nextLine();
     }
@@ -246,13 +280,6 @@ public class StudentManager implements Loadable, Saveable{
     //EFFECTS: prints out a student's first and last name, as well as certain needs for all students in the classList
     private void printList(List<Student> classList) {
         printer.printList(classList);
-//        for (Student s: classList){
-//            String finalString = s.getfName() + " " + s.getlName();
-//            for (HomeworkEval h: s.getListOfHomework()) {
-//                finalString += h.studentNeeds();
-//            }
-//            System.out.println(finalString + s.getAttendanceEval().studentNeeds());
-//        }
     }
 
     //note: printHomeworkSelection and printSelectionDisplay were refactored out to reduce duplication
@@ -260,22 +287,11 @@ public class StudentManager implements Loadable, Saveable{
     //EFFECTS: prints out a numbered selection of all homework
     private void printHomeworkSelection(List<HomeworkEval> loh) {
         printer.printHomeworkSelection(loh);
-//        Integer i = 1;
-//        for (HomeworkEval h : loh) {
-//            System.out.println("[" + i + "] " + h.getName());
-//            i++;
-//        }
     }
 
     //EFFECTS: prints out all students in the classList, numbered starting from 1,
     private void printSelectionDisplay() {
         printer.printSelectionDisplay(classList);
-//            System.out.println("Please select a student");
-//            int i = 1;
-//            for (Student s : classList) {
-//                System.out.println("[" + i + "]" + " " + s.getfName() + " " + s.getlName());
-//                i++;
-//            }
         }
 
     //MODIFIES: this
@@ -289,6 +305,7 @@ public class StudentManager implements Loadable, Saveable{
         Student s = new Student(fName, lName);
         s.setAttendanceEval(new AttendanceEval(totalDays, s));
         classList.add(s);
+        addObserver(s);
         System.out.println("You have added " + fName + " " + lName + " " + "to the class-list.");
     }
 
