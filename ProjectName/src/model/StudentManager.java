@@ -91,7 +91,7 @@ public class StudentManager extends Subject implements Loadable, Saveable{
             Double temp = obj.getJSONObject("main").getDouble("temp");
             String weather = obj.getJSONArray("weather").getJSONObject(0).getString("description");
             Double tempInCelcius =Math.round ((temp -  273.15) * 10000.0) / 10000.0;
-            System.out.println("It is currently " + tempInCelcius + " celcius degrees with " + weather+".");
+            System.out.println("It is currently " + tempInCelcius + " degrees celcius with " + weather+".");
 
         } finally {
 
