@@ -1,13 +1,24 @@
 package ui;
 
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LabelChanger extends JFrame implements ActionListener{
-    private JLabel label;
+
+    JLabel label;
+    JLabel label1;
+    JLabel label2;
+    JLabel label3;
+    JLabel label4;
+    JLabel label5;
+
+    private List<JLabel> labels = new ArrayList<>();
     private JTextField field;
     public LabelChanger()
     {
@@ -16,27 +27,45 @@ public class LabelChanger extends JFrame implements ActionListener{
         setPreferredSize(new Dimension(400, 400));
         ((JPanel) getContentPane()).setBorder(new EmptyBorder(13, 13, 13, 13) );;
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        JButton btn1 = new JButton("add to class-list");
-        JButton btn2 = new JButton("assign homework");
 
-        btn1.setActionCommand("add");
-        btn2.setActionCommand("assign");
+        field = new JTextField();
 
-        btn1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btn2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton btn = new JButton("submit");
 
-        btn1.addActionListener(this);
-        btn2.addActionListener(this);
+
+
+        btn.setActionCommand("myButton");
+
+        btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+
+
         //sets "this" class as an action listener for btn.
         //that means that when the btn is clicked,
         //this.actionPerformed(ActionEvent e) will be called.
         //You could also set a different class, if you wanted
         //to capture the response behaviour elsewhere
         label = new JLabel("What would you like to do?");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(label);
-        add(btn1);
-        add(btn2);
+        label1 = new JLabel("[1] add to class-list");
+        label2 = new JLabel("[2] assign homework");
+        label3 = new JLabel("[3] record marks");
+        label4 = new JLabel("[4] calculate student grades");
+        label5 = new JLabel("[5] show class-list alerts");
+
+        labels.add(label);
+        labels.add(label1);
+        labels.add(label2);
+        labels.add(label3);
+        labels.add(label4);
+        labels.add(label5);
+
+        for (JLabel l: labels) {
+            l.setAlignmentX(Component.CENTER_ALIGNMENT);
+            add(l);
+        }
+
+        add(field);
+        add(btn);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
