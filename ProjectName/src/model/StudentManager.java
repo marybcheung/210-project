@@ -16,8 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import jdk.nashorn.internal.parser.JSONParser;
-import netscape.javascript.JSObject;
+
 import org.json.*;
 
 //used LittleCalculatorStarterLab as a reference
