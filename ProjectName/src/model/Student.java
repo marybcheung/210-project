@@ -1,5 +1,7 @@
 package model;
 
+import interfaces.Observer;
+
 import java.util.*;
 
 public class Student implements Observer {

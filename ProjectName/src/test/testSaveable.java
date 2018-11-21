@@ -7,6 +7,7 @@ import model.Student;
 import model.StudentManager;
 import org.junit.Before;
 import org.junit.Test;
+import ui.GUI;
 
 import java.io.IOException;
 import java.nio.file.Files;

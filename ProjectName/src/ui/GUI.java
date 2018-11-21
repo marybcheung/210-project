@@ -1,26 +1,32 @@
 package ui;
 
 
+import model.Student;
+import model.StudentManager;
+import org.json.JSONException;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
-public class LabelChanger extends JFrame implements ActionListener{
+public class GUI extends JFrame implements ActionListener{
 
-    JLabel label;
-    JLabel label1;
-    JLabel label2;
-    JLabel label3;
-    JLabel label4;
-    JLabel label5;
+    public String getAction() {
+        return action;
+    }
 
-    private List<JLabel> labels = new ArrayList<>();
+    private String action;
+    private List<JButton> labels = new ArrayList<>();
     private JTextField field;
-    public LabelChanger()
+    public GUI()
     {
         super("Student Manager");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -35,6 +41,7 @@ public class LabelChanger extends JFrame implements ActionListener{
 
 
         btn.setActionCommand("myButton");
+        btn.addActionListener(this);
 
         btn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -45,22 +52,21 @@ public class LabelChanger extends JFrame implements ActionListener{
         //this.actionPerformed(ActionEvent e) will be called.
         //You could also set a different class, if you wanted
         //to capture the response behaviour elsewhere
-        label = new JLabel("What would you like to do?");
-        label1 = new JLabel("[1] add to class-list");
-        label2 = new JLabel("[2] assign homework");
-        label3 = new JLabel("[3] record marks");
-        label4 = new JLabel("[4] calculate student grades");
-        label5 = new JLabel("[5] show class-list alerts");
+        JLabel label = new JLabel("Time to manage some students!");
 
-        labels.add(label);
-        labels.add(label1);
-        labels.add(label2);
-        labels.add(label3);
-        labels.add(label4);
-        labels.add(label5);
+        add(label);
 
-        for (JLabel l: labels) {
-            l.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //https://www.codejava.net/java-se/swing/redirect-standard-output-streams-to-jtextarea
+        JTextArea jTextArea = new JTextArea();
+        jTextArea.setLineWrap(true);
+        add(jTextArea);
+        PrintStream printStream = new PrintStream(new CustomOutputStream(jTextArea));
+        System.setOut(printStream);
+        System.setErr(printStream);
+
+
+        for (JButton l: labels) {
+            l.setAlignmentX(Component.LEFT_ALIGNMENT);
             add(l);
         }
 
@@ -74,15 +80,15 @@ public class LabelChanger extends JFrame implements ActionListener{
 
     //this is the method that runs when Swing registers an action on an element
     //for which this class is an ActionListener
-    public void actionPerformed(ActionEvent e)
-    {
-        if(e.getActionCommand().equals("add"))
-        {
-            label.setText(field.getText());
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("myButton")) {
+            action = field.getText();
         }
+
     }
-    public static void main(String[] args)
-    {
-        new LabelChanger();
+
+    public static void main(String[] args) throws IOException, JSONException {
+        new GUI();
+        new StudentManager().run();
     }
 }

@@ -4,6 +4,8 @@ import exceptions.NegativeNumeratorException;
 import interfaces.Loadable;
 import interfaces.Saveable;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,18 +23,19 @@ import org.json.*;
 
 //used LittleCalculatorStarterLab as a reference
 //used FileReaderWriter as a reference
-public class StudentManager extends Subject implements Loadable, Saveable{
+public class StudentManager extends Subject implements Loadable, Saveable, ActionListener{
     static ArrayList<Student> classList = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
     static double totalDays;
     private Printer printer = new Printer();
-
+    private String action;
 
     //MODIFIES: this
     //EFFECTS: takes user input to call appropriate function, unless classList is empty, in which case
     //         [2], [3], [4], and [5] do nothing, or if the students have not been assigned any homework,
     //         in which case [3] and [4] do nothing
     public void run() throws IOException, JSONException {
+
         interactionLoop: while (true) {
             printUserChoices();
             String action = scanner.nextLine();
@@ -60,9 +63,38 @@ public class StudentManager extends Subject implements Loadable, Saveable{
                     System.out.println("Could not find the save file.");
                 }
                 break;
-                case "9": checkWeather();
-                break;
-                case "10" : break interactionLoop;
+                case "9": break interactionLoop;
+            }
+        }
+    }
+
+    public void run(String action) throws IOException, JSONException {
+        interactionLoop: while (true) {
+            switch (action){
+                case "1": if(totalDays == 0){ setTotalDays();}
+                    createStudent();
+                    break;
+                case "2": if (classList.size() != 0){assignClassHomework();}
+                    break;
+                case "3": if (classList.size() != 0 && classList.get(0).getListOfHomework().size() != 0) {recordMarks(); }
+                    break;
+                case "4": if(classList.size() != 0){calculateStudentGrades();}
+                    break;
+                case "5": if(classList.size() != 0) {printList(classList); }
+                    break;
+                case "6": if(classList.size() != 0) {markAbsent();}
+                    break;
+                case "7": try {loadSM(classList);
+                } catch (IOException e){
+                    System.out.println("Could not find the save file.");
+                }
+                    break;
+                case "8": try {saveSM(classList);
+                } catch (IOException e){
+                    System.out.println("Could not find the save file.");
+                }
+                    break;
+                case "9": break interactionLoop;
             }
         }
     }
@@ -126,6 +158,7 @@ public class StudentManager extends Subject implements Loadable, Saveable{
     //MODIFIES: this
     //EFFECTS: sets totalDays to user input
     private void setTotalDays() {
+        System.out.println("");
         System.out.println("Before adding a student, please enter the total number of days in the school year.");
         totalDays = scanner.nextInt();
         scanner.nextLine();
@@ -309,4 +342,8 @@ public class StudentManager extends Subject implements Loadable, Saveable{
         System.out.println("You have added " + fName + " " + lName + " " + "to the class-list.");
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        scanner.nextLine();
+    }
 }

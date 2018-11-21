@@ -6,6 +6,7 @@ import model.Student;
 import model.StudentManager;
 import org.junit.Before;
 import org.junit.Test;
+import ui.GUI;
 
 import java.util.ArrayList;
 import java.util.List;
