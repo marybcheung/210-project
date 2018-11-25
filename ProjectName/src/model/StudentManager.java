@@ -4,8 +4,6 @@ import exceptions.NegativeNumeratorException;
 import interfaces.Loadable;
 import interfaces.Saveable;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,81 +21,80 @@ import org.json.*;
 
 //used LittleCalculatorStarterLab as a reference
 //used FileReaderWriter as a reference
-public class StudentManager extends Subject implements Loadable, Saveable, ActionListener{
+public class StudentManager extends Subject implements Loadable, Saveable{
     static ArrayList<Student> classList = new ArrayList<>();
+
+
     static Scanner scanner = new Scanner(System.in);
     static double totalDays;
     private Printer printer = new Printer();
-    private String action;
+
+
+    private String action = "";
 
     //MODIFIES: this
     //EFFECTS: takes user input to call appropriate function, unless classList is empty, in which case
     //         [2], [3], [4], and [5] do nothing, or if the students have not been assigned any homework,
     //         in which case [3] and [4] do nothing
-    public void run() throws IOException, JSONException {
-
+    public void run() throws IOException, JSONException, InterruptedException {
         interactionLoop: while (true) {
             printUserChoices();
-            String action = scanner.nextLine();
-            switch (action){
-                case "1": if(totalDays == 0){ setTotalDays();}
-                createStudent();
-                break;
-                case "2": if (classList.size() != 0){assignClassHomework();}
-                break;
-                case "3": if (classList.size() != 0 && classList.get(0).getListOfHomework().size() != 0) {recordMarks(); }
-                break;
-                case "4": if(classList.size() != 0){calculateStudentGrades();}
-                break;
-                case "5": if(classList.size() != 0) {printList(classList); }
-                break;
-                case "6": if(classList.size() != 0) {markAbsent();}
-                break;
-                case "7": try {loadSM(classList);
-                } catch (IOException e){
-                    System.out.println("Could not find the save file.");
+            waitForInput();
+//                    String action = scanner.nextLine();
+                    switch (action) {
+                        case "1":
+                            if (totalDays == 0) {
+                                setTotalDays();
+                            }
+                            createStudent();
+                            break;
+                        case "2":
+                            if (classList.size() != 0) {
+                                assignClassHomework();
+                            }
+                            break;
+                        case "3":
+                            if (classList.size() != 0 && classList.get(0).getListOfHomework().size() != 0) {
+                                recordMarks();
+                            }
+                            break;
+                        case "4":
+                            if (classList.size() != 0) {
+                                calculateStudentGrades();
+                            }
+                            break;
+                        case "5":
+                            if (classList.size() != 0) {
+                                printList(classList);
+                            }
+                            break;
+                        case "6":
+                            if (classList.size() != 0) {
+                                markAbsent();
+                            }
+                            break;
+                        case "7":
+                            try {
+                                loadSM(classList);
+                            } catch (IOException e) {
+                                System.out.println("Could not find the save file.");
+                            }
+                            break;
+                        case "8":
+                            try {
+                                saveSM(classList);
+                            } catch (IOException e) {
+                                System.out.println("Could not find the save file.");
+                            }
+                            break;
+//                        case "9":
+//                            System.out.println("I'm quitting!");
+//                            break interactionLoop;
+                    }
                 }
-                break;
-                case "8": try {saveSM(classList);
-                } catch (IOException e){
-                    System.out.println("Could not find the save file.");
-                }
-                break;
-                case "9": break interactionLoop;
-            }
-        }
+
     }
 
-    public void run(String action) throws IOException, JSONException {
-        interactionLoop: while (true) {
-            switch (action){
-                case "1": if(totalDays == 0){ setTotalDays();}
-                    createStudent();
-                    break;
-                case "2": if (classList.size() != 0){assignClassHomework();}
-                    break;
-                case "3": if (classList.size() != 0 && classList.get(0).getListOfHomework().size() != 0) {recordMarks(); }
-                    break;
-                case "4": if(classList.size() != 0){calculateStudentGrades();}
-                    break;
-                case "5": if(classList.size() != 0) {printList(classList); }
-                    break;
-                case "6": if(classList.size() != 0) {markAbsent();}
-                    break;
-                case "7": try {loadSM(classList);
-                } catch (IOException e){
-                    System.out.println("Could not find the save file.");
-                }
-                    break;
-                case "8": try {saveSM(classList);
-                } catch (IOException e){
-                    System.out.println("Could not find the save file.");
-                }
-                    break;
-                case "9": break interactionLoop;
-            }
-        }
-    }
 
     private void checkWeather() throws IOException, JSONException {
         String apikey = "d4d3ad1357a5b82005a201318ed641e5"; //fill this in with the API key they email you
@@ -135,19 +132,22 @@ public class StudentManager extends Subject implements Loadable, Saveable, Actio
     //REQUIRES: at least one student in the class-List, totalDays is set.
     //MODIFIES: this
     //EFFECTS: marks a student absent, and prints out confirmation
-    private void markAbsent() {
+    private void markAbsent() throws InterruptedException {
         printSelectionDisplay();
-        Integer selection = scanner.nextInt() - 1;
+        waitForInput();
+        Integer selection = /*scanner.nextInt()*/ Integer.parseInt(action) - 1;
         if (selection >= 0 && selection < classList.size()) {
             Student s = classList.get(selection);
             try {
                 s.getAttendanceEval().deductMark();
-                System.out.println(s.getfName() + " has been marked absent.");
+                System.out.println("\n"+s.getfName() + " has been marked absent.");
             } catch (NegativeNumeratorException e) {
                 System.out.println("Student cannot be absent for more days than there are in the school year.");
-            } finally {
-                scanner.nextLine();
             }
+
+//            finally {
+//                scanner.nextLine();
+//            }
         }
 
 
@@ -157,11 +157,13 @@ public class StudentManager extends Subject implements Loadable, Saveable, Actio
     //REQUIRES: user input is an integer
     //MODIFIES: this
     //EFFECTS: sets totalDays to user input
-    private void setTotalDays() {
+    private void setTotalDays() throws InterruptedException, IOException, JSONException {
         System.out.println("");
         System.out.println("Before adding a student, please enter the total number of days in the school year.");
-        totalDays = scanner.nextInt();
-        scanner.nextLine();
+//        totalDays = scanner.nextInt();
+        waitForInput();
+        totalDays = Integer.parseInt(action);
+
     }
 
     //EFFECTS: prints out the list of actions a user can take
@@ -213,9 +215,9 @@ public class StudentManager extends Subject implements Loadable, Saveable, Actio
                 classList.add(s);
                 addObserver(s);
             }
-            System.out.println("You have loaded a class-list.");
+            System.out.println("\nYou have loaded a class-list.");
         } else {
-            System.out.println("There is no saved class-list.");
+            System.out.println("\nThere is no saved class-list.");
         }
     }
 
@@ -246,29 +248,32 @@ public class StudentManager extends Subject implements Loadable, Saveable, Actio
     //REQUIRES: grade >= 0 && grade <= hl.getOutOf()
     //MODIFIES: this
     //EFFECTS: sets selected Student's mark in selected HomeworkEval
-    private void recordMarks() {
+    private void recordMarks() throws InterruptedException {
         printSelectionDisplay();
-        Integer selection = scanner.nextInt() - 1;
+        waitForInput();
+        Integer selection = /*scanner.nextInt()*/ Integer.parseInt(action)-1;
         if (selection >= 0 && selection < classList.size()) {
             Student s = classList.get(selection);
             List<HomeworkEval> loh = s.getListOfHomework();
             printHomeworkSelection(loh);
-            Integer hSelection = scanner.nextInt() - 1;
+            waitForInput();
+            Integer hSelection = /*scanner.nextInt()*/Integer.parseInt(action)-1;
             recordTheMark(s, loh, hSelection);
         }
-        scanner.nextLine();
+//        scanner.nextLine();
     }
 
-    private void recordTheMark(Student s, List<HomeworkEval> loh, Integer selection) {
+    private void recordTheMark(Student s, List<HomeworkEval> loh, Integer selection) throws InterruptedException {
         if (selection >= 0 && selection < loh.size()) {
             HomeworkEval homework = loh.get(selection);
-            System.out.println("Total marks: " + homework.getOutOf() + ". " + "Please enter the student's grade");
-            Integer grade = scanner.nextInt();
+            System.out.println("\nTotal marks: " + homework.getOutOf() + ". " + "Please enter the student's grade");
+            waitForInput();
+            Integer grade = /*scanner.nextInt()*/Integer.parseInt(action);
             try {
                 homework.setEarned(grade);
-                System.out.println("You have recorded " + s.getfName() + "'s mark.");
+                System.out.println("\nYou have recorded " + s.getfName() + "'s mark.");
             } catch (NegativeNumeratorException e) {
-                System.out.println("Cannot set mark to a negative integer.");
+                System.out.println("\nCannot set mark to a negative integer.");
             }
         }
     }
@@ -277,36 +282,39 @@ public class StudentManager extends Subject implements Loadable, Saveable, Actio
     //MODIFIES: this
     //EFFECTS: calculates % grade for each HomeworkEval in selected Student's
     //         listOfHomework and prints out said grade.
-    private void calculateStudentGrades() {
+    private void calculateStudentGrades() throws InterruptedException {
         printSelectionDisplay();
-        Integer selection = scanner.nextInt() - 1;
+        waitForInput();
+        Integer selection = /*scanner.nextInt()*/Integer.parseInt(action) - 1;
         if (selection >= 0 && selection < classList.size()) {
             Student s = classList.get(selection);
             List<HomeworkEval> hList = s.getListOfHomework();
             for (HomeworkEval h : hList) {
                 h.calculateGrade();
-                System.out.println(s.getfName() + " earned " + h.calculateGrade() + "%" + " for " + h.getName());
+                System.out.println("\n"+s.getfName() + " earned " + h.calculateGrade() + "%" + " for " + h.getName());
             }
         }
-        scanner.nextLine();
+//        scanner.nextLine();
     }
 
 
     //MODIFIES: this
     //EFFECTS: constructs a new HomeworkEval and adds it to listOfHomework for every Student
     //         in the class-list
-    private void assignClassHomework() {
-        System.out.println("Please enter a name for this assignment.");
-        String name = scanner.nextLine();
-        System.out.println("Please enter the total marks.");
-        Integer total = scanner.nextInt();
+    private void assignClassHomework() throws InterruptedException {
+        System.out.println("\nPlease enter a name for this assignment.");
+        waitForInput();
+        String name = /*scanner.nextLine()*/action;
+        System.out.println("\nPlease enter the total marks.");
+        waitForInput();
+        Integer total = /*scanner.nextInt()*/Integer.parseInt(action);
         for (Student s:classList) {
             HomeworkEval h = new HomeworkEval(name, total, s);
             s.getListOfHomework().add(h);
         }
         notifyObservers(name, total);
-        System.out.println("You have assigned " + name + " to the class.");
-        scanner.nextLine();
+        System.out.println("\nYou have assigned " + name + " to the class.");
+//        scanner.nextLine();
     }
 
 
@@ -330,20 +338,29 @@ public class StudentManager extends Subject implements Loadable, Saveable, Actio
     //MODIFIES: this
     //EFFECTS: creates a new Student, adds this Student to the classList,
     //         and prints a line confirming this action
-    private void createStudent() {
-        System.out.println("Please enter the student's first name.");
-        String fName = scanner.nextLine();
-        System.out.println("Please enter the student's last name.");
-        String lName = scanner.nextLine();
+    private void createStudent() throws InterruptedException {
+        System.out.println("\nPlease enter the student's first name.");
+        waitForInput();
+        String fName = /*scanner.nextLine()*/action;
+        System.out.println("\nPlease enter the student's last name.");
+        waitForInput();
+        String lName = /*scanner.nextLine()*/action;
         Student s = new Student(fName, lName);
         s.setAttendanceEval(new AttendanceEval(totalDays, s));
         classList.add(s);
         addObserver(s);
-        System.out.println("You have added " + fName + " " + lName + " " + "to the class-list.");
+        System.out.println("\nYou have added " + fName + " " + lName + " " + "to the class-list.");
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        scanner.nextLine();
+    private void waitForInput() throws InterruptedException {
+        synchronized (this){
+            wait();
+        }
     }
+
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
 }
