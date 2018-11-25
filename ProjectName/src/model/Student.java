@@ -74,6 +74,6 @@ public class Student implements Observer {
 
     @Override
     public void update(String name, Integer outOf) {
-        System.out.println("\n-->"+fName + " " + lName + " has been notified about new assignment: " + name +" ["+outOf+"]");
+        System.out.println("\n-->"+fName + " " + lName + " has been notified about the new assignment: " + name +" ["+outOf+"]");
     }
 }

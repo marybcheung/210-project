@@ -1,2 +1,2 @@
-Mary Cheung 180.0 180.0 math 20.0 100.0
-Angela Cheung 180.0 180.0 math 100.0 100.0
+Arnold Shortman 180.0 180.0 poetry 21.0 25.0
+Helga Pataki 180.0 179.0 poetry 25.0 25.0

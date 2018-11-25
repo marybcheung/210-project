@@ -184,7 +184,7 @@ public class StudentManager extends Subject implements Loadable, Saveable{
             writer.println(line);
         }
         writer.close();
-        System.out.println("You have saved the class-list");
+        System.out.println("\nYou have saved the class-list.");
     }
 
     //This was originally in the saveSM method, extracted for better readability
@@ -352,6 +352,7 @@ public class StudentManager extends Subject implements Loadable, Saveable{
         System.out.println("\nYou have added " + fName + " " + lName + " " + "to the class-list.");
     }
 
+    //EFFECTS: pauses a method until the button has been pressed in the GUI class
     private void waitForInput() throws InterruptedException {
         synchronized (this){
             wait();
