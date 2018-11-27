@@ -2,26 +2,30 @@ package ui;
 
 
 
-import jdk.internal.util.xml.impl.Input;
+
 import model.StudentManager;
 import org.json.JSONException;
 
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class GUI extends JFrame implements ActionListener{
 
     private String action;
-    private List<JButton> labels = new ArrayList<>();
     private JTextField field;
     private StudentManager studentManager;
+    private File file = new File("LOZ_Get_Heart.wav");
+
+
 
     public GUI(StudentManager studentManager)
     {
@@ -32,7 +36,9 @@ public class GUI extends JFrame implements ActionListener{
         ((JPanel) getContentPane()).setBorder(new EmptyBorder(13, 13, 13, 13) );;
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
+        getContentPane().setBackground(Color.pink);
         field = new JTextField();
+        field.setFont(field.getFont().deriveFont(14f));
 
         JButton btn = new JButton("submit");
 
@@ -51,12 +57,14 @@ public class GUI extends JFrame implements ActionListener{
         //You could also set a different class, if you wanted
         //to capture the response behaviour elsewhere
         JLabel label = new JLabel("Time to manage some students!");
+        label.setFont(label.getFont().deriveFont(14f));
         label.setAlignmentX(Component.RIGHT_ALIGNMENT);
         add(label);
 
 
         JTextArea jTextArea = new JTextArea();
-        jTextArea.setRows(15);
+        jTextArea.setFont(jTextArea.getFont().deriveFont(14f));
+        jTextArea.setRows(13);
         jTextArea.setColumns(5);
         JScrollPane jScrollPane = new JScrollPane(jTextArea);
 
@@ -77,12 +85,14 @@ public class GUI extends JFrame implements ActionListener{
         setLocationRelativeTo(null);
         setVisible(true);
         setResizable(false);
+
     }
 
     //this is the method that runs when Swing registers an action on an element
     //for which this class is an ActionListener
     public synchronized void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("myButton")) {
+            playSound();
             action = field.getText();
             field.setText("");
             studentManager.setAction(action);
@@ -92,6 +102,21 @@ public class GUI extends JFrame implements ActionListener{
             }
         }
 
+    }
+
+    //I got this idea from https://www.codeproject.com/Questions/1210248/Play-wav-file-in-java
+    private void playSound() {
+        try{
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(file));
+            clip.start();
+        } catch (LineUnavailableException e1) {
+            e1.printStackTrace();
+        } catch (UnsupportedAudioFileException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
     }
 
 
