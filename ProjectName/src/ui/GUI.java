@@ -18,14 +18,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 
+//I used the LabelChanger example as a starting point
 public class GUI extends JFrame implements ActionListener{
 
     private String action;
     private JTextField field;
     private StudentManager studentManager;
     private File file = new File("LOZ_Get_Heart.wav");
-
-
 
     public GUI(StudentManager studentManager)
     {
