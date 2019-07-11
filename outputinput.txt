@@ -1,2 +1,3 @@
+Mary Cheung 180.0 179.0 math 15.0 20.0
 Arnold Shortman 180.0 180.0 poetry 21.0 25.0
 Helga Pataki 180.0 179.0 poetry 25.0 25.0

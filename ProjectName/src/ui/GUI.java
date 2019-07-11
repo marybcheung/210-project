@@ -72,8 +72,6 @@ public class GUI extends JFrame implements ActionListener{
         add(jScrollPane);
         //I got this idea from <https://www.codejava.net/java-se/swing/redirect-standard-output-streams-to-jtextarea>
         PrintStream printStream = new PrintStream(new CustomOutputStream(jTextArea));
-
-
         System.setOut(printStream);
         System.setErr(printStream);
 
